@@ -11,7 +11,7 @@ const saveSensorService = async ({ temperature }) => {
 const getAllSensorData = async (req, res) => {
 
     const data = await SensorData.find().sort({ timestamp: -1 });
-    console.log("Sensor verileri:", data); // ← bu satır
+    console.log("Sensor verileri:", data); 
     return data;
 };
 module.exports = {

@@ -7,7 +7,11 @@ const temperatureSchema = new mongoose.Schema({
   },
   timestamp: {
     type: Date,
-    default: Date.now
+    default: () => {
+      const now = new Date();
+      now.setHours(now.getHours() + 3); // UTC+3
+      return now;
+    }
   }
 },{ collection: 'sensor' } );
 
