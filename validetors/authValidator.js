@@ -1,3 +1,7 @@
+const express = require('express');
+const app = express();
+
+app.use(express.json()); 
 function validateRegister(req,res,next) {
     const { email,name, password } = req.body;
      if(!email||!name||!password){
@@ -22,6 +26,7 @@ function validateDetele(req,res,next){
         console.log("Email or password part must be filled.");
         return res.status(400).json({error:"Email name or password part must be filled."})
     }
+    next();
 }
 
 module.exports = {
