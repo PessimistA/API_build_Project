@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose');//sadece 1 tane yeterli Database' e bağlanma burada
 
 const connectDB = async () => {
   try {
