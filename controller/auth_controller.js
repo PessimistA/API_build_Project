@@ -1,53 +1,31 @@
+const User = require('../models/mongouser');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
-const SECRET_KEY = "SUPER_SECRET_KEY";
-const users = []; // geçici bellek
+async function findUserByEmail(email) {
+    return await User.findOne({ email });
+}
 
-const register = async (req, res) => {
-    const { email, name, password } = req.body;
-    const isexistuser = users.find(u => u.email === email);
-    if (isexistuser) {
-        return res.status(409).json({ error: "This user already exists." });
-    }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = { id: users.length + 1, email, name, password: hashedPassword };
-    users.push(newUser);
-    console.log("User added successfully");
-    res.status(201).json({ message: "User added successfully" });
-};
+async function comparePasswords(plain, hash) {
+    return await bcrypt.compare(plain, hash);
+}
 
-const login = async (req, res) => {
-    const { email, password } = req.body;
-    const user = users.find(u => u.email === email);
-    if (!user) {
-        return res.status(400).json({ error: "No such user can be found." });
-    }
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-        return res.status(400).json({ error: "Password, email or name is not correct." });
-    }
-    const token = jwt.sign({ userId: user.id, email: user.email }, SECRET_KEY, { expiresIn: '1h' });
-    res.json({ token });
-};
+async function hashPassword(password) {
+    return await bcrypt.hash(password, 10);
+}
 
-const deleteUser = async (req, res) => {
-    const { email, password } = req.body;
-    const index = users.findIndex(u => u.email === email);
-    if (index === -1) {
-        return res.status(400).json({ error: "No such user can be found." });
-    }
-    const user = users[index];
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-        return res.status(400).json({ error: "Password is incorrect." });
-    }
-    users.splice(index, 1);
-    res.json({ message: "User deleted." });
-};
+async function createUser(email, name, hashedPassword) {
+    const newUser = new User({ email, name, password: hashedPassword });
+    return await newUser.save();
+}
+
+async function deleteUserByEmail(email) {
+    return await User.deleteOne({ email });
+}
 
 module.exports = {
-    register,
-    login,
-    deleteUser
+    findUserByEmail,
+    comparePasswords,
+    hashPassword,
+    createUser,
+    deleteUserByEmail
 };

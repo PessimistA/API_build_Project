@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const userRoutes = require('./user');     // ✔️ doğru isim
+const userRoutes = require('./user');    
 const sensorRoutes = require('./sensor');
 
-router.use('/user', userRoutes);          // ✔️ burada da doğru kullanılmalı
+router.use('/user', userRoutes);         
 router.use('/sensor', sensorRoutes);
 
 module.exports = router;

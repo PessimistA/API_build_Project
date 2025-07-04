@@ -1,5 +1,8 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/mongouser')
 const SECRET_KEY = "SUPER_SECRET_KEY";
+
+
 
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
