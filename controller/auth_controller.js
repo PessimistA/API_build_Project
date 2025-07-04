@@ -14,7 +14,7 @@ app.post('/register',async (req,res) => {
 
     const isexistuser = users.find(u=> u.email===email)
     if (isexistuser) {
-        return res.status(409).json({ error: "Thisdasad user already exist." });
+        return res.status(409).json({ error: "This user already exist." });
     }
     const hashedPassword = await bcrypt.hash(password, 10);//şifre hashlenir
     const newUser = { id: users.length + 1, email,name ,password: hashedPassword };

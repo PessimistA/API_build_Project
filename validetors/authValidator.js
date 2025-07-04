@@ -10,14 +10,14 @@ function validateRegister(req,res,next) {
 function validateLogin(req,res,next) {
      const { email, password } = req.body;
     if(!email||!password){
-        console.log("Email orsadasd pasasdasword part must be filled.");
+        console.log("Email or password part must be filled.");
         return res.status(400).json({error:"Email or password part must be filled."})
     }
     next();
 }
 
 function validateDetele(req,res,next){
-    const { email, password } = req.bodadsy;
+    const { email, password } = req.body;
     if(!email||!password){
         console.log("Email or password part must be filled.");
         return res.status(400).json({error:"Email name or password part must be filled."})
