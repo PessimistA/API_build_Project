@@ -11,10 +11,7 @@ const users = [];
 
 app.post('/register',async (req,res) => {
      const { email,name, password } = req.body;
-     if(!email||!name||!password){
-        console.log("Email name or password part must be filled.");
-        return res.status(400).json({error:"Email name or password part must be filled."})
-     }
+
     const isexistuser = users.find(u=> u.email===email)
     if (isexistuser) {
         return res.status(409).json({ error: "This user already exist." });
@@ -28,10 +25,7 @@ app.post('/register',async (req,res) => {
 
 app.post('/login',async (req,res) => {
      const { email, password } = req.body;
-    if(!email||!password){
-        console.log("Email or password part must be filled.");
-        return res.status(400).json({error:"Email name or password part must be filled."})
-    }
+
     const user = users.find(u=>u.email===email)
     if (!user) {
         console.log("No such user can be found.");
@@ -48,10 +42,6 @@ app.post('/login',async (req,res) => {
 });
 app.post('/delete',async (req,res) => {
     const { email, password } = req.body;
-    if(!email||!password){
-        console.log("Email or password part must be filled.");
-        return res.status(400).json({error:"Email name or password part must be filled."})
-    }
     const userIndex = users.findIndex(u=>u.email===email)
     if (userIndex === -1) {
         console.log("No such user can be found.");
