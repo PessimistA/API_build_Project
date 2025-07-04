@@ -17,7 +17,7 @@ function validateLogin(req,res,next) {
 }
 
 function validateDetele(req,res,next){
-    const { email, password } = req.body;
+    const { email, password } = req.bodadsy;
     if(!email||!password){
         console.log("Email or password part must be filled.");
         return res.status(400).json({error:"Email name or password part must be filled."})
