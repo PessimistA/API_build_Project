@@ -2,29 +2,34 @@ const { validateSensorData } = require('../validetors/sensorValidator');
 const { saveSensorService ,getAllSensorData} = require('../controller/sensor_controller');
 const { searchSensorByRange } = require('../controller/sensor_controller');
 const { deleteSensorById } = require('../controller/sensor_controller');
+const { findUserByEmail,comparePasswords,hashPassword,createUser,deleteUserByEmail,addSensorToUser } = require('../controller/auth_controller');
 const { get } = require('mongoose');
-const { addSensorToUser } = require('../controller/auth_controller');
 
 const add = async (req, res) => {
   try {
-    validateSensorData(req.body); 
+    validateSensorData(req.body);
+
     const payload = {
       userId: req.user.userId,
-      temperature: req.body.temperature
+      temperature: req.body.temperature,
     };
 
-    const saved = await saveSensorService(payload); 
-    const sensorId = saved._id;
+    const savedSensor = await saveSensorService(payload);
+    const sensorId = savedSensor._id;
 
-    await addSensorToUser(req.user.userId, sensorId); // <--- burada kullanıcıya sensorId ekleniyor
+    await addSensorToUser(req.user.userId, sensorId);
 
-    res.status(201).json({ message: 'Data added successfully.', id: sensorId });
+    // Kullanıcıyı tekrar çek ve sensors dizisini kontrol et
+    const userAfterUpdate = await User.findById(req.user.userId);
+    console.log("Updated user sensors:", userAfterUpdate.sensors);
+
+    res.status(201).json({ message: "Data added successfully.", id: sensorId });
   } catch (error) {
-    if (error.message === 'Missing value sent') {
+    if (error.message === "Missing value sent") {
       return res.status(400).json({ message: error.message });
     }
     console.error(error);
-    res.status(500).json({ message: 'Internal error' });
+    res.status(500).json({ message: "Internal error" });
   }
 };
 
@@ -35,8 +40,10 @@ const saveSensorData = async (req, res) => {
       userId: req.user.userId,
       temperature: req.body.temperature
     };
-    await saveSensorService(payload);
+      const savedSensor = await saveSensorService(payload);
+    const sensorId = savedSensor._id;
 
+    await addSensorToUser(req.user.userId, sensorId);
     res.status(201).json({ message: 'Data added successfully.' });
   } catch (error) {
     if (error.message === 'Missing value sent') {

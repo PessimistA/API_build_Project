@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const User = require('../models/mongouser');
 const bcrypt = require('bcryptjs');
 
@@ -23,11 +24,11 @@ async function deleteUserByEmail(email) {
 }
 
 async function addSensorToUser(userId, sensorId) {
-    const user = await User.findById(userId);
-    if (!user) throw new Error("User not found");
+  const user = await User.findById(userId);
+  if (!user) throw new Error("User not found");
 
-    user.sensors.push(sensorId);
-    await user.save();
+  user.sensors.push(new mongoose.Types.ObjectId(sensorId));
+  await user.save();
 }
 
 
