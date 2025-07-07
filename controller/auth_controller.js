@@ -22,10 +22,21 @@ async function deleteUserByEmail(email) {
     return await User.deleteOne({ email });
 }
 
+async function addSensorToUser(userId, sensorId) {
+    const user = await User.findById(userId);
+    if (!user) throw new Error("User not found");
+
+    user.sensors.push(sensorId);
+    await user.save();
+}
+
+
+
 module.exports = {
     findUserByEmail,
     comparePasswords,
     hashPassword,
     createUser,
-    deleteUserByEmail
+    deleteUserByEmail,
+    addSensorToUser
 };

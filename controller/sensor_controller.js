@@ -1,20 +1,37 @@
 const SensorData = require('../models/mongosensor');
 
-const saveSensorService = async ({ temperature }) => {
+const saveSensorService = async ({ temperature ,userId}) => {
   const newRecord = new SensorData({
-    temperature
+    temperature,
+    userId
   });
 
-  await newRecord.save();
+  const saved = await newRecord.save();
+  return saved; // <--- Burayı ekle!
 };
 
-const getAllSensorData = async (req, res) => {
+const getAllSensorData = async (userId) => {
+  return await SensorData.find({ userId }).sort({ timestamp: -1 });
+};
 
-    const data = await SensorData.find().sort({ timestamp: -1 });
-    console.log("Sensor verileri:", data); 
-    return data;
+
+const deleteSensorById = async (sensorId, userId) => {
+  const result = await SensorData.deleteOne({ _id: sensorId, userId });
+  return result.deletedCount > 0;
+};
+
+
+const searchSensorByRange = async (min, max, userId) => {
+  const query = {
+    userId,
+    temperature: { $gte: min, $lte: max }
+  };
+
+  return await SensorData.find(query).sort({ timestamp: -1 });
 };
 module.exports = {
   saveSensorService,
-  getAllSensorData
+  getAllSensorData,
+  deleteSensorById,
+  searchSensorByRange
 };
