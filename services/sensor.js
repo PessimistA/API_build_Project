@@ -19,7 +19,7 @@ const add = async (req, res) => {
 
     await addSensorToUser(req.user.userId, sensorId);
 
-    // Kullanıcıyı tekrar çek ve sensors dizisini kontrol et
+
     const userAfterUpdate = await User.findById(req.user.userId);
     console.log("Updated user sensors:", userAfterUpdate.sensors);
 
@@ -44,7 +44,7 @@ const saveSensorData = async (req, res) => {
     const sensorId = savedSensor._id;
 
     await addSensorToUser(req.user.userId, sensorId);
-    res.status(201).json({ message: 'Data added successfully.' });
+    res.status(201).json({ message: "Data added successfully.", id: sensorId });
   } catch (error) {
     if (error.message === 'Missing value sent') {
       return res.status(400).json({ message: error.message });
