@@ -7,7 +7,7 @@ const saveSensorService = async ({ temperature ,userId}) => {
   });
 
   const saved = await newRecord.save();
-  return saved; // <--- Burayı ekle!
+  return saved; 
 };
 
 const getAllSensorData = async (userId) => {
