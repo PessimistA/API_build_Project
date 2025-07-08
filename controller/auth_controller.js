@@ -58,6 +58,16 @@ async function addSensorToUser(userId, sensorId) {
   user.sensors.push(new mongoose.Types.ObjectId(sensorId));
   await user.save();
 }
+async function deletesensorfromUser(userId, sensorId) {
+  const user = await User.findById(userId);
+  if (!user) throw new Error("User not found");
+
+  user.sensors = user.sensors.filter(
+    sensor => sensor._id.toString() !== sensorId.toString()
+  );
+
+  await user.save();
+}
 
 
 
@@ -67,5 +77,6 @@ module.exports = {
     hashPassword,
     createUser,
     deleteUserByEmail,
-    addSensorToUser
+    addSensorToUser,
+    deletesensorfromUser
 };

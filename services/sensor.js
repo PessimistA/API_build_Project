@@ -2,7 +2,7 @@ const { validateSensorData } = require('../validetors/sensorValidator');
 const { saveSensorService ,getAllSensorData} = require('../controller/sensor_controller');
 const { searchSensorByRange } = require('../controller/sensor_controller');
 const { deleteSensorById } = require('../controller/sensor_controller');
-const { findUserByEmail,comparePasswords,hashPassword,createUser,deleteUserByEmail,addSensorToUser } = require('../controller/auth_controller');
+const { findUserByEmail,comparePasswords,hashPassword,createUser,deleteUserByEmail,addSensorToUser,deletesensorfromUser } = require('../controller/auth_controller');
 const { get } = require('mongoose');
 
 
@@ -62,6 +62,7 @@ const deleteSensorData = async (req, res) => {
       return res.status(404).json({ message: 'Kayıt bulunamadı veya yetkiniz yok.' });
     }
 
+    await deletesensorfromUser(userId,sensorId);
     res.status(200).json({ message: 'Kayıt silindi.' });
   } catch (error) {
     console.error(error);

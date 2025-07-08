@@ -1,4 +1,5 @@
 const SensorData = require('../models/mongosensor');
+const User = require('../models/mongouser');
 
 /**
  * @brief saveSensorService  sensor'e bilgi kayıdının yapıldığı yerdir
@@ -30,6 +31,7 @@ const getAllSensorData = async (userId) => {
 
 const deleteSensorById = async (sensorId, userId) => {
   const result = await SensorData.deleteOne({ _id: sensorId, userId });
+  
   return result.deletedCount > 0;
 };
 /**
