@@ -1,23 +1,25 @@
 const mongoose = require('mongoose');
-
+/**
+ * @brief data şeması oluşturulur tutulacak verilerin tipleri belirlenir
+ */
 const temperatureSchema = new mongoose.Schema({
-  userId: {
+  userId: {/**@param userid alınan sıcaklık verisinde aktif kullanıcının id'si de kaydedilier */
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User',/**referans olarak mongouser daki User şemasını alır */
     required: true
   },
-  temperature: {
+  temperature: {/**@param temperature kullanıcının sıcaklık verisi sayı olarak tutulur int de olur float da */
     type: Number,
     required: true
   },
   timestamp: {
-    type: Date,
+    type: Date,/**@param date Zaman şu an alınır ama default olarak UTC kullanıldığından 3 saat eklenir*/
     default: () => {
     const now = new Date();
-    now.setHours(now.getHours() + 3); // UTC+3 saat ekle
+    now.setHours(now.getHours() + 3); 
     return now;
     }
   }
-},{ collection: 'sensor' } );
+},{ collection: 'sensor' } );/**sensor koleksiyonunda bu veriler tutulur */
 
 module.exports = mongoose.model('TemperatureData', temperatureSchema);

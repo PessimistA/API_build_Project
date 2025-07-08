@@ -1,22 +1,21 @@
 require('dotenv').config();
-const express = require('express');
-const authRoutes = require('./routes/user'); 
+const express = require('express');//express kütüphanesi kullanılır
+const authRoutes = require('./routes/user'); //routers fonksiyonları kullanılır
 const sensorRoutes = require('./routes/sensors');
 
 const app = express();
-app.use(express.json());
+app.use(express.json());//requestleri json olarak parse eder
 
-app.use('/api/sensor', sensorRoutes);
+app.use('/api/sensor', sensorRoutes);//yol belirtir yani 
 app.use('/api/auth', authRoutes);
 
 console.log("API is ready");
 
-const connectDB = require('./loaders/mongodb');
+const connectDB = require('./loaders/mongodb');//mongo db nin komutu alınır
 
-connectDB();
+connectDB();//mongo db başlatılır
 
-app.listen(process.env.PORT,()=> {
-    console.log(`Server running on port ${process.env.PORT}`);
+app.listen(process.env.PORT, () => {//express özelliği ile port dinlenir
+     console.log(`Server running on port ${process.env.PORT}`);
 });
-
-module.exports = app;
+module.exports = app;//test' te kullanmak için export et
