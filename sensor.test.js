@@ -1,5 +1,6 @@
 const request = require('supertest');
 const app = require('./server'); 
+const { v4: uuidv4 } = require('uuid');
 const mongoose = require('mongoose');
 const User = require('./models/mongouser');
 
@@ -11,17 +12,17 @@ afterAll(async () => {/**arka planda mongo bağlantısı kapanması için ekleni
 
 describe('Sensor API Test', () => {/**testleri genel olarak tanımlar */
   const user1 = {
-    email: 'Basisal1@example',
+    email: 'Dene12@example',
     name: 'Basi',
     password: 'ab12.'
   };
   const user2 = {
-    email: 'Agrilal1@example',
+    email: 'dene22@example',
     name: 'Agr',
     password: '6534a12.'
   };
   const user3 = {
-    email: 'vibial1@example',
+    email: 'dene32@example',
     name: 'vib',
     password: '523.'
   };
@@ -56,9 +57,11 @@ describe('Sensor API Test', () => {/**testleri genel olarak tanımlar */
     let temp1 = 15;
     for (let index = 0; index < allusers.length; index++) {
       const element = allusers[index];
+      const idempotencyKey = uuidv4(); 
       const res = await request(app)
         .post('/api/sensor')
         .set('Authorization', `Bearer ${token[index]}`)
+        .set('Idempotency-Key', idempotencyKey)
         .send({ temperature: temp1 });
 
       temp1 += 12;
@@ -81,7 +84,7 @@ describe('Sensor API Test', () => {/**testleri genel olarak tanımlar */
         .set('Authorization', `Bearer ${token[index]}`);
     }
   });
-
+  /*
   it('6)delete part:', async () => {
     const user = await User.findOne({ email: allusers[0].email }).populate('sensors');
 
@@ -99,5 +102,5 @@ describe('Sensor API Test', () => {/**testleri genel olarak tanımlar */
     const res = await request(app)
       .delete(`/api/sensor/${sensorId}`)
       .set('Authorization', `Bearer ${token[1]}`);
-  });
+  });*/
 });

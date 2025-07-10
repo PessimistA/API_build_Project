@@ -2,9 +2,11 @@ require('dotenv').config();
 const express = require('express');//express kütüphanesi kullanılır
 const authRoutes = require('./routes/user'); //routers fonksiyonları kullanılır
 const sensorRoutes = require('./routes/sensors');
+const rateLimiter = require('./middleware/rateLimiter');
 
 const app = express();
 app.use(express.json());//requestleri json olarak parse eder
+app.use(rateLimiter);
 
 app.use('/api/sensor', sensorRoutes);//yol belirtir yani 
 app.use('/api/auth', authRoutes);
