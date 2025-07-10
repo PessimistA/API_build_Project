@@ -12,18 +12,18 @@ afterAll(async () => {/**arka planda mongo bağlantısı kapanması için ekleni
 
 describe('Sensor API Test', () => {/**testleri genel olarak tanımlar */
   const user1 = {
-    email: 'Dene12@example',
-    name: 'Basi',
+    email: 'Dene123@example',
+    name: 'B',
     password: 'ab12.'
   };
   const user2 = {
-    email: 'dene22@example',
-    name: 'Agr',
+    email: 'dene223@example',
+    name: 'A',
     password: '6534a12.'
   };
   const user3 = {
-    email: 'dene32@example',
-    name: 'vib',
+    email: 'dene323@example',
+    name: 'v',
     password: '523.'
   };
   const allusers = [
