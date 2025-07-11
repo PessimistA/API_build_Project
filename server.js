@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');//express kütüphanesi kullanılır
+const mongoose = require('mongoose');
 const authRoutes = require('./routes/user'); //routers fonksiyonları kullanılır
 const sensorRoutes = require('./routes/sensors');
 
@@ -22,8 +23,8 @@ const connectDB = require('./loaders/mongodb');//mongo db nin komutu alınır
 
 connectDB();//mongo db başlatılır
 
-app.listen(process.env.PORT, () => {//express özelliği ile port dinlenir
-     console.log(`Server running on port ${process.env.PORT}`);
+const server = app.listen(process.env.PORT, () => {
+  console.log(`Server running on port ${process.env.PORT}`);
 });
 process.on('SIGINT', async () => {
   console.log('\nSIGINT sinyali alındı. Sunucu kapatılıyor...');

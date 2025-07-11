@@ -1,6 +1,5 @@
-#version: '3.8'
 
-#services:
+services:
   api:
     build: .
     container_name: main-api
@@ -8,8 +7,18 @@
       - "${PORT}:3000"
     depends_on:
       - mongo
+      - redis
     env_file:
       - .env
+    environment:
+      - PORT=${PORT}
+      - MONGO_URI=${MONGO_URI}
+      - MONGO_URI_DOCKER=${MONGO_URI_DOCKER}
+      - IS_DOCKER=${IS_DOCKER}
+      - SECRET_KEY=${SECRET_KEY}
+    restart: always
+    volumes:
+      - .:/usr/src/app
 
   mongo:
     image: mongo
@@ -18,6 +27,13 @@
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+    restart: always
+  redis:
+    image: redis:latest
+    container_name: redis-cache
+    ports:
+      - "6379:6379"
+    restart: always
 
 volumes:
   mongo-data:
