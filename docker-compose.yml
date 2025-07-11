@@ -16,7 +16,7 @@ services:
       - MONGO_URI_DOCKER=${MONGO_URI_DOCKER}
       - IS_DOCKER=${IS_DOCKER}
       - SECRET_KEY=${SECRET_KEY}
-    restart: always
+    restart: "no"
     volumes:
       - .:/usr/src/app
 
@@ -27,13 +27,13 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
-    restart: always
+    restart: "no"
   redis:
     image: redis:latest
     container_name: redis-cache
     ports:
       - "6379:6379"
-    restart: always
+    restart: "no"
 
 volumes:
   mongo-data:
