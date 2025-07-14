@@ -4,13 +4,12 @@ const mongoose = require('mongoose');
 const authRoutes = require('./routes/user'); //routers fonksiyonları kullanılır
 const sensorRoutes = require('./routes/sensors');
 
-const rateLimiter = require('./middleware/rateLimiter');
 const globalLimit = require('./middleware/globalLimit');
 
 const app = express();
+app.set('trust proxy', 1);
 app.use(express.json());//requestleri json olarak parse eder
 
-app.use(rateLimiter);
 // Global limit
 app.use(globalLimit);
 
@@ -22,9 +21,9 @@ console.log("API is ready");
 const connectDB = require('./loaders/mongodb');//mongo db nin komutu alınır
 
 connectDB();//mongo db başlatılır
-
-const server = app.listen(process.env.PORT, () => {
-  console.log(`Server running on port ${process.env.PORT}`);
+const port = process.env.PORT || 8080;
+const server =app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
 process.on('SIGINT', async () => {
   console.log('\nSIGINT sinyali alındı. Sunucu kapatılıyor...');

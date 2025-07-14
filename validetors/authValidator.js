@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-
+app.set('trust proxy', 1);
 app.use(express.json()); 
 /**
  * @brief kayıt olunurken eksik bilgi olup olmadığını kontrol eder

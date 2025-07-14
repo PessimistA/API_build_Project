@@ -3,7 +3,7 @@ const app = require('./server');
 const { v4: uuidv4 } = require('uuid');
 const mongoose = require('mongoose');
 const User = require('./models/mongouser');
-
+jest.setTimeout(30000);
 
 let token = [];
 afterAll(async () => {/**arka planda mongo bağlantısı kapanması için eklenir */

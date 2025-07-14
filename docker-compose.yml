@@ -1,13 +1,11 @@
-
 services:
   api:
     build: .
     container_name: main-api
     ports:
-      - "${PORT}:3000"
+      - "8080:8080"
     depends_on:
       - mongo
-      - redis
     env_file:
       - .env
     environment:
@@ -27,12 +25,6 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
-    restart: "no"
-  redis:
-    image: redis:latest
-    container_name: redis-cache
-    ports:
-      - "6379:6379"
     restart: "no"
 
 volumes:
