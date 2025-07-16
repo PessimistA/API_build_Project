@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/mongouser')
 const SECRET_KEY = process.env.SECRET_KEY || "SUPER_SECRET_KEY";
 
+
 /**
  * @brief authenticateToken tokenin geçerliliğini doğrular
  * @param req json formatında aldığı request
