@@ -1,0 +1,54 @@
+.enterance-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #cce4f6, #a0c4ff);/*#a0c4ff*/
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+}
+
+/* Sol taraftaki butonlar */
+.enterance-left {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+}
+
+/* Sağ taraftaki başlık */
+.enterance-right {
+  text-align: right;
+}
+
+.enterance-title {
+  font-size: 5vw;
+  font-weight: bold;
+  color: #1e3a8a;
+}
+
+.enterance-button {
+  padding: 3vw 7.5vw;
+  font-size: 1.5vw; 
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  color: white;
+}
+
+.enterance-button.login {
+  background-color: #2563eb;
+}
+
+.enterance-button.login:hover {
+  background-color: #1d4ed8;
+}
+
+.enterance-button.register {
+  background-color: #040366;
+}
+
+.enterance-button.register:hover {
+  background-color: #16148b;
+}

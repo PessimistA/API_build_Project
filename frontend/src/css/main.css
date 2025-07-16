@@ -1,0 +1,227 @@
+.main-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+  background: #e0f2fe;
+}
+
+.header {
+  background-color: #0284c7;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+}
+
+.left-panel,
+.right-panel {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #0284c7;
+  box-sizing: border-box;
+  padding: 1rem;
+}
+
+.left-panel {
+  background-color: #bae6fd;
+}
+
+.right-panel {
+  background-color: #dbeafe;
+  font-size: 1.5rem;
+  color: #0369a1;
+  text-align: left;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.measure-button {
+  padding: 1rem 3rem;
+  font-size: 1.5rem;
+  background-color: #0284c7;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.measure-button:hover {
+  background-color: #0369a1;
+}
+
+.temperature-list {
+  list-style: none;
+  padding-left: 0;
+  width: 100%;
+  max-width: 400px;
+}
+
+.temperature-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #a5b4fc;
+}
+
+.temperature-list li span {
+  font-weight: bold;
+  color: #0c4a6e;
+}
+
+.temperature-display.no-data {
+  font-style: italic;
+  color: #6b7280;
+}
+/* Mevcut kodlarınızın altına ekleyebilirsiniz */
+
+/* Üst bar menü butonu */
+.menu-button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  padding: 0;
+}
+
+/* Drawer (yan panel) */
+.drawer {
+  position: fixed;
+  top: 60px; /* header yüksekliği kadar */
+  right: -280px; /* gizli */
+  width: 280px;
+  height: calc(100% - 60px);
+  background-color: #f3f4f6;
+  box-shadow: -4px 0 6px rgba(0,0,0,0.1);
+  transition: right 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.drawer.open {
+  right: 0;
+}
+
+.drawer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex-grow: 1;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: white;
+}
+
+.search-box input {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+}
+
+.delete-user-btn {
+  background-color: #dc2626;
+  color: white;
+  padding: 0.75rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-user-btn:hover {
+  background-color: #b91c1c;
+}
+.out-btn:hover{
+    background-color: #b91c1c;
+}
+
+/* Sıcaklık silme butonu */
+.delete-temp-btn {
+  background: none;
+  border: none;
+  color: #dc2626;
+  cursor: pointer;
+  margin-left: 1rem;
+  vertical-align: middle;
+  transition: color 0.3s ease;
+}
+.out-btn{
+  background-color: #dc2626;
+  color: white;
+  padding: 0.75rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.delete-temp-btn:hover {
+  color: #b91c1c;
+}
+
+.range-search {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.range-search label {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.range-search input {
+  width: 70px;
+  padding: 0.25rem;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  font-size: 1rem;
+}
+
+.range-search button {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: #0284c7;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.range-search button:hover {
+  background-color: #0369a1;
+}
+
+/* Küçük ekranlar için drawer tam genişlik olabilir */
+@media (max-width: 600px) {
+  .drawer {
+    width: 100%;
+    top: 60px;
+    height: calc(100% - 60px);
+  }
+}
