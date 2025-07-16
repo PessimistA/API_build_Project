@@ -17,17 +17,39 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.email && formData.password) {
-      console.log("Giriş formu gönderildi:", formData);
-      // Burada API doğrulama yapılabilir
-      navigate("/main");  // Ana sayfaya yönlendirme
-    } else {
+    if (!formData.email || !formData.password) {
       alert("Lütfen email ve şifre giriniz.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
+        console.log("Token alındı:", data.token);
+
+        navigate("/main");
+      } else {
+        alert("Giriş başarısız: " + data.error);
+      }
+    } catch (err) {
+      console.error("Sunucu hatası:", err);
+      alert("Sunucu hatası oluştu.");
     }
   };
+
 
   return (
     <div className="login-container">

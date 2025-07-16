@@ -3,10 +3,18 @@ const express = require('express');//express kütüphanesi kullanılır
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/user'); //routers fonksiyonları kullanılır
 const sensorRoutes = require('./routes/sensors');
+const cors = require('cors');
 
 const globalLimit = require('./middleware/globalLimit');
 
+
 const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:3000',  // React frontend portu
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}));
+
 app.set('trust proxy', 1);
 app.use(express.json());//requestleri json olarak parse eder
 

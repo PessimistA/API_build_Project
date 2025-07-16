@@ -1,74 +1,195 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // useEffect eklendi
 import { useNavigate } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
-
+import { v4 as uuidv4 } from "uuid"; 
 import "../css/main.css";
 
+function getTokenPayload(token) {
+  if (!token) return null;
+  try {
+    const payload = token.split(".")[1];
+    const decoded = atob(payload);
+    return JSON.parse(decoded);
+  } catch {
+    return null;
+  }
+}
+
 const Main = () => {
-  const [temperatures, setTemperatures] = useState([]);
+
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [minTemp, setMinTemp] = useState("");
   const [maxTemp, setMaxTemp] = useState("");
   const navigate = useNavigate();
 
-  const measureTemperature = () => {
-    const temp = (20 + Math.random() * 10).toFixed(1);
-    setTemperatures((prev) => [...prev, temp]);
-  };
+  // --- BURADA TOKEN SÜRESİ KONTROLÜ ---
+const [allTemperatures, setAllTemperatures] = useState([]);
+const [temperatures, setTemperatures] = useState([]);
 
+useEffect(() => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    navigate("/login");
+    return;
+  }
+
+  const payload = getTokenPayload(token);
+
+  if (!payload || !payload.exp) {
+    localStorage.removeItem("token");
+    navigate("/login");
+    return;
+  }
+
+  const now = Date.now();
+  const expiry = payload.exp * 1000;
+  const timeout = expiry - now;
+
+  if (timeout <= 0) {
+    localStorage.removeItem("token");
+    navigate("/login");
+    return;
+  }
+
+  // Oturum süresi dolunca çıkış yaptır
+  const timer = setTimeout(() => {
+    alert("Oturum süreniz doldu. Lütfen tekrar giriş yapınız.");
+    localStorage.removeItem("token");
+    navigate("/login");
+  }, timeout);
+
+  // Token geçerliyse verileri çek
+  fetch("http://localhost:8080/api/sensor", {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+    },
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Veri çekilemedi");
+      return res.json();
+    })
+    .then((data) => {
+      setAllTemperatures(data);
+      setTemperatures(data);
+    })
+    .catch((err) => {
+      alert("Veriler çekilemedi.");
+      console.error(err);
+    });
+
+  return () => clearTimeout(timer); // Temizleme
+}, [navigate]);
+
+
+  // --- TOKEN KONTROL BİTTİ ---
+
+  const measureTemperature = async () => {
+    const temp = (20 + Math.random() * 10).toFixed(1);
+    const token = localStorage.getItem("token");
+
+    try {
+      const res = await fetch("http://localhost:8080/api/sensor", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+          "Idempotency-Key": uuidv4(),  // Her isteğe yeni benzersiz key
+        },
+        body: JSON.stringify({ temperature: temp }),
+      });
+
+      if (res.ok) {
+          const sensorData = await res.json();  // backend'den { id, temperature } bekliyoruz
+          console.log("Backend'den dönen veri:", sensorData); 
+           setTemperatures(prev => [...prev, { id: sensorData.id, temperature: temp }]);
+      } else {
+        alert("Sıcaklık kaydı başarısız.");
+      }
+    } catch (error) {
+      alert("Sunucu hatası oluştu.");
+    }
+  };
   const toggleDrawer = () => {
     setDrawerOpen((prev) => !prev);
   };
 
-  const deleteTemperature = (index) => {
-    setTemperatures((prev) => prev.filter((_, i) => i !== index));
-  };
 
   const handleDeleteUser = async () => {
     if (window.confirm("Kullanıcıyı silmek istediğine emin misin?")) {
       try {
-        const res = await fetch("/api/deleteUser", { method: "DELETE" });
+        const token = localStorage.getItem("token");
+        const res = await fetch("http://localhost:8080/api/auth/delete", { 
+          method: "DELETE",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
         if (res.ok) {
           alert("Kullanıcı başarıyla silindi.");
-          navigate("/");
+          localStorage.removeItem("token"); // Silme sonrası logout
+          navigate("/login");
         } else {
           alert("Silme işlemi başarısız.");
         }
       } catch (error) {
+        console.error(error);
         alert("Bir hata oluştu.");
       }
     }
   };
 
-  const handleSearch = () => {
-    const min = parseFloat(minTemp);
-    const max = parseFloat(maxTemp);
 
-    if (isNaN(min) || isNaN(max)) {
-      alert("Lütfen geçerli min ve max sıcaklık girin.");
-      return;
-    }
+  const handleSearch = () => {
+    let min = parseFloat(minTemp);
+    let max = parseFloat(maxTemp);
+
+    if (isNaN(min)) min = 0;
+    if (isNaN(max)) max = 100;
+
     if (min > max) {
       alert("Minimum sıcaklık, maksimum sıcaklıktan küçük veya eşit olmalı.");
       return;
     }
 
-    const filtered = temperatures.filter((t) => {
-      const val = parseFloat(t);
+    const filtered = allTemperatures.filter(({ temperature }) => {
+      const val = parseFloat(temperature);
       return val >= min && val <= max;
     });
     setTemperatures(filtered);
     setDrawerOpen(false);
   };
-  const handleout =async ()=>{
+  const handleout = async () => {
     try {
-        navigate("/");
+      localStorage.removeItem("token"); // Çıkışta token temizle
+      navigate("/login");
     } catch (error) {
-        alert("Bir hata oluştu.");
+      alert("Bir hata oluştu.");
     }
-  }
+  };
+  const deleteTemperatureAndBackend = async (index, id) => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await fetch(`http://localhost:8080/api/sensor/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
 
-  // Ekranda gösterilecek sıcaklıklar (şu an sadece filtrelenmiş)
+      if (res.ok) {
+        setTemperatures(prev => prev.filter((_, i) => i !== index));
+      } else {
+        alert("Sıcaklık silme işlemi başarısız.");
+      }
+    } catch (error) {
+      alert("Sunucu hatası oluştu.");
+    }
+  };
+
+
+
   const filteredTemps = temperatures;
 
   return (
@@ -105,7 +226,7 @@ const Main = () => {
             </label>
             <button onClick={handleSearch}>Ara</button>
           </div>
-        <button className="out-btn" onClick={handleout}>
+          <button className="out-btn" onClick={handleout}>
             Çıkış Yap
           </button>
           <button className="delete-user-btn" onClick={handleDeleteUser}>
@@ -124,9 +245,12 @@ const Main = () => {
         <div className="right-panel">
           {filteredTemps.length > 0 ? (
             <ul className="temperature-list">
-              {filteredTemps.map((temp, index) => (
-                <li key={index}>
-                  {index + 1}. Ölçüm: <span>{temp}°C</span>
+              {filteredTemps.map(({ id, temperature }, index) => (
+                <li key={id}>
+                  {index + 1}. Ölçüm: <span>{temperature}°C</span>
+                  <button onClick={() => deleteTemperatureAndBackend(index, id)} className="delete-temp-btn">
+                    Sil
+                  </button>
                 </li>
               ))}
             </ul>

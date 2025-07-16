@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";  // bunu ekle
 import "../css/register.css";
 
 const Register = () => {
@@ -8,6 +9,8 @@ const Register = () => {
     password: "",
   });
 
+  const navigate = useNavigate(); // navigate tanımla
+
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -15,10 +18,30 @@ const Register = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form gönderildi:", formData);
-    // Burada API'ye POST edebilirsin
+
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Kayıt başarılı: " + data.message);
+        setFormData({ name: "", email: "", password: "" });
+        navigate("/login");  // Kayıt başarılıysa login sayfasına yönlendir
+      } else {
+        alert("Kayıt hatası: " + data.error);
+      }
+    } catch (error) {
+      alert("Sunucu hatası: " + error.message);
+    }
   };
 
   return (
