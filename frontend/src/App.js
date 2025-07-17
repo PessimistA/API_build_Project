@@ -1,7 +1,7 @@
 
 
 import React from "react";
-import { BrowserRouter , Routes, Route } from "react-router-dom";
+import { HashRouter , Routes, Route } from "react-router-dom";
 import Enterance from "./html/enterance";
 import Register from "./html/register";
 import Login from "./html/login";
@@ -10,7 +10,7 @@ import ProtectedRoute from "./protectedRoute";
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Enterance/>} />
         <Route path="/login" element={<Login />} />
@@ -25,7 +25,7 @@ function App() {
           }
         />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

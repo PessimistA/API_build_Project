@@ -11,8 +11,9 @@ const globalLimit = require('./middleware/globalLimit');
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:3000',  // React frontend portu
+  origin: '-',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true // eğer cookie/auth kullanıyorsan
 }));
 
 app.set('trust proxy', 1);
