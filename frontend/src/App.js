@@ -1,21 +1,31 @@
+
+
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter , Routes, Route } from "react-router-dom";
 import Enterance from "./html/enterance";
 import Register from "./html/register";
 import Login from "./html/login";
 import Main from "./html/main";
-
+import ProtectedRoute from "./protectedRoute";
 
 function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Enterance/>} />
-        <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/main" element={<Main />} />
+        <Route path="/register" element={<Register />} />
+
+        <Route
+          path="/login/main"
+          element={
+            <ProtectedRoute>
+              <Main />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 

@@ -29,11 +29,13 @@ const getAllSensorData = async (userId) => {
  * @param userId sensörü kullanıcı id si ile kaydeder
  */
 
+// Sensörü sil, sadece userId ile eşleşiyorsa
 const deleteSensorById = async (sensorId, userId) => {
-  const result = await SensorData.deleteOne({ _id: sensorId, userId });
-  
+  const result = await SensorData.deleteOne({ _id: sensorId, userId: userId });
   return result.deletedCount > 0;
 };
+
+// Kullanıcı dokümanından sensör id’sini çıkar
 /**
  * @brief searchSensorByRange aranan bilgilerin hangi aralıkta olduğunun kararını veririz
  * @param min smin sınırı girere

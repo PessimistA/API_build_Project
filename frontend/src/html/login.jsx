@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/login.css";
-
+const apiUrl = process.env.REACT_APP_API_URL;
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -26,7 +26,7 @@ const Login = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/login", {
+      const response = await fetch(`${apiUrl}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -40,7 +40,7 @@ const Login = () => {
         localStorage.setItem("token", data.token);
         console.log("Token alındı:", data.token);
 
-        navigate("/main");
+        navigate("/login/main");
       } else {
         alert("Giriş başarısız: " + data.error);
       }

@@ -55,18 +55,25 @@ const getAllData = async (req, res) => {/**Get ile kullanılan fonksiyon */
 const deleteSensorData = async (req, res) => {
   try {
     const sensorId = req.params.id;
-    const userId = req.user.userId;
+    const userId = req.user.userId || req.user.id;
 
+    if (!sensorId || sensorId === 'undefined') {
+      return res.status(400).json({ message: 'Geçersiz sensor ID' });
+    }
+
+    // Sensörü kullanıcıya ait olarak sil
     const deleted = await deleteSensorById(sensorId, userId);
     if (!deleted) {
       return res.status(404).json({ message: 'Kayıt bulunamadı veya yetkiniz yok.' });
     }
 
-    await deletesensorfromUser(userId,sensorId);
-    res.status(200).json({ message: 'Kayıt silindi.' });
+    // Kullanıcı objesinden sensör id’sini kaldır
+    await deletesensorfromUser(userId, sensorId);
+
+    return res.status(200).json({ message: 'Kayıt silindi.' });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Sunucu hatası.' });
+    console.error("deleteSensorData hatası:", error);
+    return res.status(500).json({ message: 'Sunucu hatası.' });
   }
 };
 

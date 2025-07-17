@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const authController = require('../controller/auth_controller');
+const Temperature = require('../models/mongosensor'); 
 const SECRET_KEY = process.env.SECRET_KEY || "SUPER_SECRET_KEY";
 
 /**
@@ -16,7 +17,7 @@ exports.register = async (req, res) => {
         if (user) {
             return res.status(409).json({ error: "User already exists" });
         }
-
+            
         const hashed = await authController.hashPassword(password);/**kayıtlı değilse eklenirken güvenlik için şifresi hashlenir */
         await authController.createUser(email, name, hashed);/**kayıt işlemi yapılır */
 
@@ -60,19 +61,20 @@ exports.login = async (req, res) => {
  * @param res json formatında karşıya verilen respond
  */
 exports.deleteUser = async (req, res) => {
-    const { email, password } = req.body;
+  try {
+    const email = req.user.email;
+    const user = await authController.findUserByEmail(email);
+    if (!user) return res.status(404).json({ error: "Kullanıcı bulunamadı" });
 
-    try {
-        const user = await authController.findUserByEmail(email);
-        if (!user) return res.status(400).json({ error: "User not found" });
+    // Önce sıcaklık verilerini sil
+    await Temperature.deleteMany({ userId: user._id });
 
-        const isMatch = await authController.comparePasswords(password, user.password);
-        if (!isMatch) return res.status(400).json({ error: "Invalid password" });
+    // Ardından kullanıcıyı sil
+    await authController.deleteUserByEmail(email);
 
-        await authController.deleteUserByEmail(email);/**email ile bulunmuş kullanıcı silinir */
-        res.json({ message: "User deleted" });
-    } catch (err) {
-        res.status(500).json({ error: "Internal server error" });
-    }
+    res.json({ message: "Kullanıcı ve verileri silindi." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Sunucu hatası" });
+  }
 };
-

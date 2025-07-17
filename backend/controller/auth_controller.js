@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const User = require('../models/mongouser');
 const bcrypt = require('bcryptjs');
-
+const SensorData = require('../models/mongosensor');
 /**
  * @brief finduserbyEmail email ile user'ın bulunmasını sağlar.
  * @param email email değeri alınır
@@ -58,16 +58,12 @@ async function addSensorToUser(userId, sensorId) {
   user.sensors.push(new mongoose.Types.ObjectId(sensorId));
   await user.save();
 }
-async function deletesensorfromUser(userId, sensorId) {
-  const user = await User.findById(userId);
-  if (!user) throw new Error("User not found");
-
-  user.sensors = user.sensors.filter(
-    sensor => sensor._id.toString() !== sensorId.toString()
+const deletesensorfromUser = async (userId, sensorId) => {
+  await User.updateOne(
+    { _id: userId },
+    { $pull: { sensors: sensorId } }
   );
-
-  await user.save();
-}
+};
 
 
 
