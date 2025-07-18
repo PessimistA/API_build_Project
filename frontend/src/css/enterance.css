@@ -52,3 +52,33 @@
 .enterance-button.register:hover {
   background-color: #16148b;
 }
+
+@media (max-width: 768px) {
+  .enterance-container {
+    flex-direction: column;     /* Butonlar ve başlık alt alta */
+    justify-content: center;    /* Dikeyde ortala */
+    align-items: center;        /* Yatayda ortala */
+    padding: 1rem;
+  }
+
+  .enterance-right {
+    text-align: center;         /* Başlık ortalanır */
+    margin-bottom: 2rem;
+  }
+  .enterance-left {
+    flex-direction: column;     /* Butonlar alt alta */
+    gap: 1.5rem;
+    width: 100%;                /* Butonları tam genişlik yap */
+    max-width: 400px;
+  }
+
+  .enterance-button {
+    width: 100%;                /* Butonlar tam genişlik */
+    padding: 1.5rem 0;
+    font-size: 1.8rem;          /* Mobilde daha büyük */
+  }
+
+  .enterance-title {
+    font-size: 8vw;             /* Başlık biraz büyür ama orantılı */
+  }
+}

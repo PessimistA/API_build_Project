@@ -15,7 +15,7 @@ function App() {
         <Route path="/" element={<Enterance/>} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
+        
         <Route
           path="/login/main"
           element={
@@ -23,7 +23,7 @@ function App() {
               <Main />
             </ProtectedRoute>
           }
-        />
+        />     
       </Routes>
     </HashRouter>
   );
