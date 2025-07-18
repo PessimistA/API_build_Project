@@ -7,11 +7,11 @@ const cors = require('cors');
 
 const globalLimit = require('./middleware/globalLimit');
 
-
+const api =process.env.FRONTEND;
 const app = express();
-
+console.log("Allowed CORS origin:", api);
 app.use(cors({
-  origin: process.env.FRONTEND,
+  origin: api,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true // eğer cookie/auth kullanıyorsan
 }));
